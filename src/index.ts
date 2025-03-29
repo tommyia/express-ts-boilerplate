@@ -1,12 +1,20 @@
 import express from 'express';
+import dotenv from 'dotenv';
+import { logger } from './lib/logger';
+import routes from './routes';
+
+dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+app.use(express.json());
+app.use('/api', routes);
 
 app.get('/', (_req, res) => {
   res.send('Hello World');
 });
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  logger.info(`🚀 Server running at http://localhost:${port}`);
 });
