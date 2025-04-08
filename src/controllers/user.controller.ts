@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
+import { prisma } from '../lib/prisma';
 
-export const getUsers = (_req: Request, res: Response) => {
-  res.json([{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }]);
+export const getUsers = async (_req: Request, res: Response) => {
+  const users = await prisma.user.findMany();
+  res.json(users);
 };
 
-export const createUser = (req: Request, res: Response) => {
-  const { name } = req.body;
-  res.status(201).json({ message: `User ${name} created!` });
+export const createUser = async (req: Request, res: Response) => {
+  const { name, email } = req.body;
+  const newUser = await prisma.user.create({
+    data: { name, email },
+  });
+  res.status(201).json(newUser);
 };
